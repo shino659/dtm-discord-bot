@@ -2,8 +2,8 @@ name: Daily DTM Notify
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # 日本時間9時（UTC 0時）
-  workflow_dispatch:
+    - cron: '0 0 * * *'  # UTCの0時 → 日本時間9時
+  workflow_dispatch:  # 手動実行も可能
 
 jobs:
   notify:
@@ -18,15 +18,10 @@ jobs:
         python-version: '3.x'
 
     - name: Install dependencies
-      run: pip install requests beautifulsoup4
+      run: pip install requests beautifulsoup4 openai
 
     - name: Run script
       env:
         DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-      run: python dtm_discord_notify.py
-
-
-    - name: Run script
-      env:
-        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
       run: python dtm_discord_notify.py
