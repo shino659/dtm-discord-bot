@@ -3,12 +3,11 @@ import os
 from bs4 import BeautifulSoup
 import openai
 
-# 環境変数からAPIキーを取得
-DISCORD_WEBHOOK_URL = os.environ.get('DISCORD_WEBHOOK_URL')
-OPENAI_API_KEY = os.environ.get('OPENAI_API_KEY')
+# OpenAI v1.x クライアント作成
+client = openai.OpenAI(api_key=os.environ.get('OPENAI_API_KEY'))
 
-# OpenAI APIセット
-openai.api_key = OPENAI_API_KEY
+# Discord Webhook URL
+DISCORD_WEBHOOK_URL = os.environ.get('DISCORD_WEBHOOK_URL')
 
 def get_plugin_boutique():
     url = 'https://www.pluginboutique.com/deals'
@@ -88,11 +87,13 @@ def rank_with_chatgpt(all_products):
         "以下のDTM製品リストから特に注目・おすすめ・人気のものに⭐をつけ、"
         "上位3つをランキング形式でまとめてください：\n\n" + all_products
     )
-    response = openai.ChatCompletion.create(
+
+    response = client.chat.completions.create(
         model="gpt-4-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
-    return response['choices'][0]['message']['content']
+
+    return response.choices[0].message.content
 
 def send_discord_notify(message):
     payload = {'content': message}
