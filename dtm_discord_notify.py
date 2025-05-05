@@ -89,7 +89,7 @@ def rank_with_chatgpt(all_products):
     )
 
     response = client.chat.completions.create(
-        model="gpt-4-turbo",
+        model="gpt-3.5-turbo",
         messages=[{"role": "user", "content": prompt}]
     )
 
