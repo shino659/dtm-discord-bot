@@ -2,7 +2,7 @@ name: Daily DTM Notify
 
 on:
   schedule:
-    - cron: '0 0 * * *'  # UTCの毎日9時（日本時間18時）
+    - cron: '0 0 * * *'  # 日本時間9時（UTC 0時）
   workflow_dispatch:
 
 jobs:
@@ -19,6 +19,12 @@ jobs:
 
     - name: Install dependencies
       run: pip install requests beautifulsoup4
+
+    - name: Run script
+      env:
+        DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+      run: python dtm_discord_notify.py
+
 
     - name: Run script
       env:
